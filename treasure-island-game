@@ -1,3 +1,5 @@
+### game created as per the flow chart diagram ###
+
 print("Welcome to Treasure Island.")
 print("Your mission is to find the treasure.")
 
