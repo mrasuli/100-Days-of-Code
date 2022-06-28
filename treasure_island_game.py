@@ -3,7 +3,7 @@
 print("Welcome to Treasure Island.")
 print("Your mission is to find the treasure.")
 
-#the code 2nd attempt
+#the code 2nd attempt ....
 
 choice1 = input('You\'re at a cross road. Where do you want to go? Type "left" or "right" \n').lower()
 if choice1 == "left":
