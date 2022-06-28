@@ -1,11 +1,11 @@
 ### game created as per the flow chart diagram ###
 
 print("Welcome to Treasure Island.")
-choice = input("Would you like to play a game? type Y for yes N for no").lower()
-    if choice == "N":
-        print("Okay no worries")
-    elif choice == "Y":
-        print("Continue with the instructions")
+choice = input("Would you like to play a game? type 'Y' for yes 'N' for no \n").lower()
+if choice == "N":
+    print("Okay no worries")
+elif choice == "Y":
+    print("Continue with the instructions")
 print("Your mission is to find the treasure.")
 
 
