@@ -1,0 +1,68 @@
+import requests
+from datetime import datetime
+import smtplib
+import time
+
+my_email = "============="
+my_password = "******"
+my_lat = 51.376163
+my_long = -0.098234
+# An Application Programming Interface (API) is a set of commands, functions, protocols, and objects that programmers
+# can use to create software or interact with an external system. we are going to interact with websites and pull
+# live data through an api endpoint
+#
+def is_iss_overhead():
+    api_response = requests.get(url="http://api.open-notify.org/iss-now.json") # this is the api endpoint
+    api_response.raise_for_status() # if we dont get a 200 code, then you will see an exception being raised with the exact error
+    data = api_response.json()
+
+    longitude = float(data["iss_position"]["longitude"]) # we can further narrow down our search by passing on these keys to get the desired data from api endpoint
+    latitude = float(data["iss_position"]["latitude"])
+
+    if my_lat-5 <= latitude <= my_lat+5 and my_long-5 <= longitude <= my_long+5:
+        return True
+
+    iss_positon = (longitude, latitude)
+
+
+# print(iss_positon)
+
+# response codes: 100 means wait...200 means its okay, 300 means go away, 400 mean error or you messed something up, 500 means something wrong server side
+
+
+def is_night():
+# we pass a long these parameters in the form of python dictionary in order to get a specific piece of data based on the para we passed on
+    parameters = {
+        "lat": my_lat,
+        "long": my_long,
+        "formatted": 0
+    }
+
+    response = requests.get("https://api.sunrise-sunset.org/json?", verify=False, params=parameters)
+    response.raise_for_status()
+    data = response.json()
+
+    sunrise = int(data["results"]["sunrise"].split("T")[1].split(":")[0]) # thisplit method narrows down the time to 12 hour format
+    sunset = int(data["results"]["sunset"].split("T")[1].split(":")[0])
+
+    print(sunrise)
+    print(sunset)
+
+
+    time_now = datetime.now().hour
+    if time_now >= sunset or time_now <= sunrise:
+        return True
+    # print(time_now.hour)
+
+
+while True:
+    time.sleep(60)
+    if is_iss_overhead() and is_night():
+        connection = smtplib.SMTP("smtp.gmail.com")
+        connection.starttls()
+        connection.login(my_email, my_password)
+        connection.sendmail(
+            from_addr=my_email,
+            to_addrs=my_email,
+            msg="Sbject: Look up \n\n The ISS is above you in the sky."
+        )
